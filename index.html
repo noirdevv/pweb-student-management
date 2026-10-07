@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Student Management</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="navbar">
+    <a class="brand" href="#">
+      <svg width="34" height="34" viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M12 3 1 9l11 6 9-4.9V17h2V9L12 3zm-6 9.2v4L12 20l6-3.8v-4L12 15.5 6 12.2z"/></svg>
+      <span>Student Management</span>
+    </a>
+    <nav class="nav-links">
+      <a href="#">Home</a>
+      <a href="#">Students</a>
+      <a href="#">About</a>
+      <span class="avatar" aria-label="Profil">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="#fff"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-6 8-6s8 2 8 6z"/></svg>
+      </span>
+    </nav>
+  </header>
+
+  <main class="layout">
+    <section class="card form-card">
+      <h2 id="formTitle">Form Student</h2>
+      <form id="studentForm" novalidate>
+        <input type="hidden" id="editId">
+
+        <label for="nim">NIM</label>
+        <input type="text" id="nim" placeholder="Masukkan NIM" inputmode="numeric">
+        <small class="error" id="nimError"></small>
+
+        <label for="nama">Nama Lengkap</label>
+        <input type="text" id="nama" placeholder="Masukkan nama lengkap">
+        <small class="error" id="namaError"></small>
+
+        <label for="jurusan">Jurusan</label>
+        <select id="jurusan">
+          <option value="">Pilih Jurusan</option>
+          <option>Informatika</option>
+          <option>Sistem Informasi</option>
+          <option>Teknik Komputer</option>
+          <option>Manajemen</option>
+        </select>
+        <small class="error" id="jurusanError"></small>
+
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="Masukkan email">
+        <small class="error" id="emailError"></small>
+
+        <div class="actions">
+          <button type="submit" class="btn btn-primary" id="btnSave">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M17 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7l-4-4zm-5 16a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm3-10H6V5h9v4z"/></svg>
+            Simpan
+          </button>
+          <button type="button" class="btn btn-gray" id="btnCancel">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/></svg>
+            Batal
+          </button>
+          <button type="reset" class="btn btn-danger" id="btnReset">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg>
+            Reset
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <section class="card table-card">
+      <div class="table-head">
+        <h2>Data Mahasiswa</h2>
+        <div class="search">
+          <input type="search" id="search" placeholder="Cari mahasiswa..." aria-label="Cari mahasiswa">
+          <button type="button" id="btnSearch" aria-label="Cari">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l5 5"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>No</th><th>NIM</th><th>Nama</th><th>Jurusan</th><th>Email</th><th>Aksi</th></tr>
+          </thead>
+          <tbody id="studentBody"></tbody>
+        </table>
+      </div>
+
+      <div class="table-foot">
+        <span id="info"></span>
+        <div class="pagination" id="pagination"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
