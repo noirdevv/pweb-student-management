@@ -84,17 +84,18 @@ Sebuah kompleks laboratorium memperoleh satu alokasi alamat `[IP Prefix].20.0/24
 3. Alokasikan blok secara berurutan mulai dari `[IP Prefix].20.0`, tanpa tumpang tindih antar blok
 4. Tentukan blok bagi Ruang Baca (±35 host) dari sisa alokasi, dengan memperhatikan bahwa network address suatu blok harus merupakan kelipatan ukuran blok tersebut
 
-| No | Segmen | Kebutuhan Host | Prefix | Network Address | Broadcast Address |
-|---|---|---|---|---|---|
-| 1 | IF-106 | ±50 | | | |
-| 2 | IF-105 | ±40 | | | |
-| 3 | Ruang Dosen | ±10 | | | |
-| 4 | Backbone A | hingga 6 router | | | |
-| 5 | Backbone B | hingga 6 router | | | |
-| 6 | Link R1–R2 | 2 | | | |
-| 7 | Link R2–R3 | 2 | | | |
-| 8 | Link R3–R1 | 2 | | | |
-| 9 | Ruang Baca (cadangan) | ±35 | | | |
+| No | Segmen | Kebutuhan Host | Prefix (/xx) | Network Address | Broadcast Address |
+| --- | --- | --- | --- | --- | --- |
+| 1 | IF-106 | ±50 | /26 | 10.135.20.0 | 10.135.20.63 |
+| 2 | IF-105 | ±40 | /26 | 10.135.20.64 | 10.135.127 |
+| 3 | Ruang Dosen | ±10 | /28 | 10.135.20.128 | 10.135.20.143 |
+| 4 | Backbone A | hingga 6 router | /29 | 10.135.20.144 | 10.135.20.151 |
+| 5 | Backbone B | hingga 6 router | /29 | 10.135.20.152 | 10.135.20.159 |
+| 6 | Link R1–R2 | 2 | /30 | 10.135.20.160 | 10.135.20.163 |
+| 7 | Link R2–R3 | 2 | /30 | 10.135.20.164 | 10.135.20.167 |
+| 8 | Link R3–R1 | 2 | /30 | 10.135.20.168 | 10.135.20.171 |
+| 9 | Ruang Baca (cadangan) | ±35 | /26 | 10.135.20.194 | 10.135.20.255 |
+
 
 ### d. Problem A.2 - Rencana Interface dan Routing Table: Chain Topology
 
@@ -112,30 +113,31 @@ Pada tahap awal (Bagian B), ketiga router disusun dalam chain topology: R1 terhu
 ### e. Tabel Alokasi Interface (rencana)
 
 | Router | ether1 (LAN) | ether2 | ether3 |
-|---|---|---|---|
-| R1 | | | - (belum digunakan) |
-| R2 | | | |
-| R3 | | | - (belum digunakan) |
+| --- | --- | --- | --- |
+| R1 | 10.135.20.129/28 | 10.135.20.161/30 | - (not used yet) |
+| R2 | 10.135.20.165/26 | 10.135.20.162/30 | 10.135.20.165/30 |
+| R3 | 10.135.20.1/26 | 10.135.20.166/30 | - (not used yet) |
 
 ### f. Routing Table (rencana)
 
 Metode dapat diisi seperti "Terhubung Langsung" atau "Static".
 
 | Router | Destination Network | Next Hop | Outgoing Interface | Metode |
-|---|---|---|---|---|
-| R1 | Ruang Dosen | | | |
-| R1 | Link R1–R2 | | | |
-| R1 | IF-105 | | | |
-| R1 | IF-106 | | | |
-| R2 | IF-105 | | | |
-| R2 | Link R1–R2 | | | |
-| R2 | Link R2–R3 | | | |
-| R2 | Ruang Dosen | | | |
-| R2 | IF-106 | | | |
-| R3 | IF-106 | | | |
-| R3 | Link R2–R3 | | | |
-| R3 | Ruang Dosen | | | |
-| R3 | IF-105 | | | |
+| --- | --- | --- | --- | --- |
+| R1 | Ruang Dosen | - | ether1 | Terhubung Langsung |
+| R1 | Link R1–R2 | - | ether2 | Terhubung Langsung |
+| R1 | IF-105 | 10.135.20.162 | ether2 | Static |
+| R1 | IF-106 | 10.135.20.162 | ether2 | Static |
+| R2 | IF-105 | - | ether1 | Terhubung Langsung |
+| R2 | Link R1–R2 | - | ether2 | Terhubung Langsung |
+| R2 | Link R2–R3 | - | ether3 | Terhubung Langsung |
+| R2 | Ruang Dosen | 10.135.20.161 | ether2 | Static |
+| R2 | IF-106 | 10.135.20.166 | ether3 | Static |
+| R3 | IF-106 | - | ether1 | Terhubung Langsung |
+| R3 | Link R2–R3 | - | ether2 | Terhubung Langsung |
+| R3 | Ruang Dosen | 10.135.20.165 | ether2 | Static |
+| R3 | IF-105 | 10.135.20.165 | ether2 | Static |
+
 
 ### g. Problem A.3 - Beban Konfigurasi Static Routing
 
@@ -150,11 +152,12 @@ Pengelola jaringan perlu memperkirakan beban pengelolaan static routing apabila 
 3. Tentukan berapa router yang konfigurasinya harus diubah ketika satu ruang baru ditambahkan
 
 | Jumlah Router (n) | Static Route per Router | Total Tanpa Cadangan | Total Dengan Cadangan | Router yang Diubah saat Menambah 1 Ruang |
-|---|---|---|---|---|
-| 3 | | | | |
-| 4 | | | | |
-| 10 | | | | |
-| n | | | | |
+| --- | --- | --- | --- | --- |
+| 3 | 2 | 6 | 12 | 3 atau 4 |
+| 4 | 3 | 12 | 24 | 4 atau 5 |
+| 10 | 9 | 90 | 180 | 10 atau 11 |
+| n | n - 1 | n(n - 1) | 2n(n - 1) | n atau n+1 (jika termasuk router baru) |
+
 
 ---
 
@@ -179,16 +182,18 @@ Pengelola jaringan perlu memperkirakan beban pengelolaan static routing apabila 
 Tabel berikut merupakan alokasi acuan yang digunakan pada seluruh langkah kerja di Bagian B, C, dan D. Silakan diisi berdasarkan hasil perhitungan pada problem A.1 dan A.2, dan kolom alamat yang digunakan bisa menyesuaikan dengan menggunakan IP Prefix masing-masing.
 
 | Segmen | Blok VLSM (/xx) | Alamat IP yang Digunakan |
-|---|---|---|
-| IF-106 | | R3 (ether1): `[...].1`<br>Kazdel (eth0): `[...].10` |
-| IF-105 | | R2 (ether1): `[...].65`<br>Yan (eth0): `[...].70` |
-| Ruang Dosen | | R1 (ether1): `[...].129`<br>Lungmen (eth0): `[...].130`<br>Laterano (eth0): `[...].131` |
-| Backbone A | | R1: `[...].145`<br>R2: `[...].146`<br>R3: `[...].147`<br>R4: `[...].148`<br>(semua ether4) |
-| Backbone B | | R1: `[...].153`<br>R2: `[...].154`<br>R3: `[...].155`<br>R4: `[...].156`<br>(semua ether5) |
-| Link R1–R2 | | R1 (ether2): `[...].161`<br>R2 (ether2): `[...].162` |
-| Link R2–R3 | | R2 (ether3): `[...].165`<br>R3 (ether2): `[...].166` |
-| Link R3–R1 | | R1 (ether3): `[...].169`<br>R3 (ether3): `[...].170` |
-| Ruang Baca | | R4 (ether1): `[...].193`<br>Higashi (eth0): `[...].200` |
+| --- | --- | --- |
+| IF-106 | /26 | R3 (ether1): 10.135.20.1 <br> Kazdel (eth0): 10.135.20.10 |
+| IF-105 | /26 | R2 (ether1): 10.135.20.65 <br> Yan (eth0): 10.135.20.70 |
+| Ruang Dosen | /28 | R1 (ether1): 10.135.20.129 <br> Lungmen (eth0): 10.135.20.130 <br> Laterano (eth0): 10.135.20.131 |
+| Backbone A | /29 | R1: 10.135.20.145 <br> R2: 10.135.20.146 <br> R3: 10.135.20.147 <br> R4: 10.135.20.148 <br> (all ether4) |
+| Backbone B | /29 | R1: 10.135.20.153 <br> R2: 10.135.20.154 <br> R3: 10.135.20.155 <br> R4: 10.135.20.156 <br> (all ether5) |
+| Link R1–R2 | /30 | R1 (ether2): 10.135.20.161 <br> R2 (ether2): 10.135.20.162 |
+| Link R2–R3 | /30 | R2 (ether3): 10.135.20.165 <br> R3 (ether2): 10.135.20.166 |
+| Link R3–R1 | /30 | R1 (ether3): 10.135.20.169 <br> R3 (ether3): 10.135.20.170 |
+| Ruang Baca | /26 | R4 (ether1): 10.135.20.193 <br> Higashi (eth0): 10.135.20.200 |
+
+
 
 ### Skenario Topologi (Gambar B.1)
 
@@ -683,8 +688,8 @@ Sebuah gedung baru memperoleh alokasi `[IP Prefix].50.0/24` untuk tiga ruang, ya
 ### c. Tabel Perhitungan VLSM
 
 | No | Parameter | Lab Jaringan (±60) | Lab Sistem Cerdas (±25) | Ruang Server (±6) | Link RA–RB | Link RB–RC |
-|---|---|---|---|---|---|---|
-| 1 | Prefix | | | | | |
-| 2 | Network Address | | | | | |
-| 3 | Broadcast Address | | | | | |
-| 4 | Rentang Host Valid | | | | | |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1 | Prefix | /26 | /27 | /29 | /30 | /30 |
+| 2 | Network Address | 10.135.50.0 | 10.135.50.64 | 10.135.50.96 | 10.135.50.104 | 10.135.50.108 |
+| 3 | Broadcast Address | 10.135.50.63 | 10.135.50.95 | 10.135.50.103 | 50.135.50.107 | 10.135.50.111 |
+| 4 | Rentang Host Valid | 10.135.50.1 - 10.135.50.62 | 10.135.50.65 - 10.135.50.94 | 10.135.50.97 - 10.135.50.102 | 10.135.50.105 - 10.135.50.106 | 10.135.50.109 - 10.135.50.110 |
